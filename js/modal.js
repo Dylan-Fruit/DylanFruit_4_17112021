@@ -26,6 +26,8 @@ const quantity = document.querySelector("#quantity");
 const quantityForm = document.querySelector(".quantityForm");
 const town = document.querySelector(".town");
 const townForm = document.querySelector(".townForm");
+const conditions = document.querySelector(".conditions");
+const conditionsForm = document.querySelector(".conditionsForm");
 
 
 
@@ -131,27 +133,40 @@ birthdate.addEventListener('focusout', function(){
   validBirthdate(this);
 });
 
+// La date de naissance ne peut pas être supérieur à 2005
+const minDate = new Date('December 31, 2005').toISOString().split('T')[0];
+console.log(minDate);
+birthdate.max = minDate;
 
+
+let birthdateRegEx = new RegExp('^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$');
 
 let birthdateError = document.createElement("p");
 
 const validBirthdate = function(inputBirthdate){
   let msg; 
   let valid = false;
-  console.log(inputBirthdate.value);
-  if(birthdateRegExp.test(inputBirthdate.value)){
+  console.log(birthdateRegEx);
+  if(birthdateRegEx.test(inputBirthdate.value)){
     valid = true;
     birthdateError.classList.remove('text-danger');
     birthdate.style.border = "none";
     birthdateForm.removeChild(birthdateError);
+  } else if(inputBirthdate.value > birthdate.max){
+    birthdateForm.appendChild(birthdateError);
+    msg = 'Veuillez indiquer une date de naissance valide.';
+    birthdateError.innerHTML = msg;
+    birthdateError.classList.add('text-danger');
+    birthdate.style.border = "solid 2px red";
   } else {
     birthdateForm.appendChild(birthdateError);
-    msg = 'Veuillez indiquer votre date de naissance';
+    msg = 'Veuillez indiquer votre date de naissance.';
     birthdateError.innerHTML = msg;
     birthdateError.classList.add('text-danger');
     birthdate.style.border = "solid 2px red";
   }
 }
+
 
 // Nombres de tournois 
 quantity.addEventListener('focusout', function(){
@@ -175,7 +190,7 @@ const validQuantity = function(inputQuantity){
     quantityForm.removeChild(quantityError);
   } else {
     quantityForm.appendChild(quantityError);
-    msg = 'Vous devez entrer un chiffre.';
+    msg = 'Vous devez entrer un nombre.';
     quantityError.innerHTML = msg;
     quantityError.classList.add('text-danger');
     quantity.style.border = "solid 2px red";
