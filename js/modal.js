@@ -12,6 +12,7 @@ const modalbg = document.querySelector(".bground");
 const closeBtn = document.querySelectorAll(".close");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const modalSubmit = document.querySelector(".btn-submit");
+const modalForm = document.getElementById("modal-form");
 const submitSuccess = document.querySelector(".submit-success");
 const formData = document.querySelectorAll(".formData");
 const firstName = document.querySelector("#first");
@@ -30,7 +31,6 @@ const conditions = document.querySelector(".conditions");
 const conditionsForm = document.querySelector(".conditionsForm");
 
 
-
 // launch modal event
 modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 
@@ -47,6 +47,17 @@ function closeModal() {
   modalbg.style.display = "none";
 }
 
+// Soumission du formulaire 
+modalForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  if(validFirst(firstName) && validLast(lastName) && validEmail(email) && validBirthdate(birthdate) && validQuantity(quantity) && validTown(town) && validConditions(conditions)){
+    submitSuccess.style.display = "flex";
+    modalForm.style.display = "none";
+    modalForm.submit();
+  } else {
+  }
+});
+
 // Validation Prénom 
 firstName.addEventListener('focusout', function(){
   validFirst(this);
@@ -57,7 +68,6 @@ let firstError = document.createElement("p");
 
 const validFirst = function(inputFirst){
   let msg; 
-  let valid = false;
   //Au moins 2 caractères dans le prénom 
   if(inputFirst.value.length < 2){
     firstNameForm.appendChild(firstError);
@@ -65,11 +75,12 @@ const validFirst = function(inputFirst){
     firstError.innerHTML = msg;
     firstError.classList.add('text-danger');
     firstName.style.border = "solid 2px red";
+    return false;
   } else {
-      valid = true;
       firstError.classList.remove('text-danger');
       firstName.style.border = "none";
       firstNameForm.removeChild(firstError);
+      return true;
   }
 }
 
@@ -83,7 +94,6 @@ let lastError = document.createElement("p");
 
 const validLast = function(inputLast){
   let msg; 
-  let valid = false;
   // Au moins 2 caractères dans le nom 
   if(inputLast.value.length < 2){
     lastNameForm.appendChild(lastError);
@@ -91,11 +101,12 @@ const validLast = function(inputLast){
     lastError.innerHTML = msg;
     lastError.classList.add('text-danger');
     lastName.style.border = "solid 2px red";
+    return false;
   } else {
-      valid = true;
       lastError.classList.remove('text-danger');
       lastName.style.border = "none";
       lastNameForm.removeChild(lastError);
+      return true;
   }
 }
 
@@ -112,19 +123,19 @@ let emailError = document.createElement("p");
 
 const validEmail = function(inputEmail){
   let msg; 
-  let valid = false;
   // Adresse valide obligatoire  
   if(emailRegExp.test(inputEmail.value)){
-    valid = true;
     emailError.classList.remove('text-danger');
     email.style.border = "none";
     emailForm.removeChild(emailError);
+    return true;
   } else {
     emailForm.appendChild(emailError);
     msg = 'Veuillez entrer une adresse email valide.';
     emailError.innerHTML = msg;
     emailError.classList.add('text-danger');
     email.style.border = "solid 2px red";
+    return false;
   }
 }
 
@@ -138,32 +149,33 @@ const minDate = new Date('December 31, 2005').toISOString().split('T')[0];
 console.log(minDate);
 birthdate.max = minDate;
 
-
-let birthdateRegEx = new RegExp('^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$');
+// Expression regulière au format YYYY-MM-DD
+let birthdateRegEx = new RegExp('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
 
 let birthdateError = document.createElement("p");
 
 const validBirthdate = function(inputBirthdate){
   let msg; 
-  let valid = false;
-  console.log(birthdateRegEx);
   if(birthdateRegEx.test(inputBirthdate.value)){
-    valid = true;
     birthdateError.classList.remove('text-danger');
     birthdate.style.border = "none";
     birthdateForm.removeChild(birthdateError);
-  } else if(inputBirthdate.value > birthdate.max){
+    return true;
+    // Erreur dans le cas où quelqu'un écrirait une date supérieure à la limite à la main
+  } else if(inputBirthdate.value > birthdate.max){ 
     birthdateForm.appendChild(birthdateError);
     msg = 'Veuillez indiquer une date de naissance valide.';
     birthdateError.innerHTML = msg;
     birthdateError.classList.add('text-danger');
     birthdate.style.border = "solid 2px red";
+    return false;
   } else {
     birthdateForm.appendChild(birthdateError);
     msg = 'Veuillez indiquer votre date de naissance.';
     birthdateError.innerHTML = msg;
     birthdateError.classList.add('text-danger');
     birthdate.style.border = "solid 2px red";
+    return false;
   }
 }
 
@@ -181,24 +193,24 @@ let quantityError = document.createElement("p");
 
 const validQuantity = function(inputQuantity){
   let msg; 
-  let valid = false;
   // entrer un chiffre  
   if(quantityRegExp.test(inputQuantity.value)){
-    valid = true;
     quantityError.classList.remove('text-danger');
     quantity.style.border = "none";
     quantityForm.removeChild(quantityError);
+    return true;
   } else {
     quantityForm.appendChild(quantityError);
     msg = 'Vous devez entrer un nombre.';
     quantityError.innerHTML = msg;
     quantityError.classList.add('text-danger');
     quantity.style.border = "solid 2px red";
+    return false;
   }
 }
 
 // Validation villes 
-town.addEventListener('click', function(){
+town.addEventListener('change', function(){
   validTown(this);
 });
 
@@ -207,15 +219,37 @@ let townError = document.createElement('p');
 
 const validTown = function(inputTown){
   let msg; 
-  let valid = false;
   if(inputTown.checked){
-    valid = true;
     townError.classList.remove('text-danger');
     townForm.removeChild(townError);
+    return true;
   } else {
     townForm.appendChild(townError);
     msg = 'Vous devez choisir une ville';
     townError.innerHTML = msg;
     townError.classList.add('text-danger');
+    return false;
+  }
+}
+
+// Case des conditions bien cochée 
+conditions.addEventListener('change', function(){
+  validConditions(this);
+});
+
+let conditionsError = document.createElement('p');
+
+const validConditions = function(inputConditions){
+  let msg;
+  if(inputConditions.checked){
+    conditionsError.classList.remove('text-danger');
+    conditionsForm.removeChild(conditionsError);
+    return true;
+  } else {
+    conditionsForm.appendChild(conditionsError);
+    msg = 'Vous devez accepter les termes et conditions';
+    conditionsError.innerHTML = msg;
+    conditionsError.classList.add('text-danger');
+    return false;
   }
 }
