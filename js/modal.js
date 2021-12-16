@@ -10,9 +10,10 @@ function editNav() {
 // DOM Elements
 const modalbg = document.querySelector(".bground");
 const closeBtn = document.querySelectorAll(".close");
+const closeAfterValid = document.querySelector(".success-close-btn");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const modalSubmit = document.querySelector(".btn-submit");
-const modalForm = document.getElementById("modal-form");
+const form = document.getElementById("modal-form");
 const submitSuccess = document.querySelector(".submit-success");
 const formData = document.querySelectorAll(".formData");
 const firstName = document.querySelector("#first");
@@ -37,29 +38,32 @@ modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 // launch modal form
 function launchModal() {
   modalbg.style.display = "block";
+  form.style.display = "block";
+  submitSuccess.style.display = "none";
 }
 
 // close modal event 
 closeBtn.forEach((close) => close.addEventListener("click", closeModal));
+closeAfterValid.addEventListener("click", closeModal);
 
 // close modal form
 function closeModal() {
   modalbg.style.display = "none";
 }
 
-// Soumission du formulaire 
-modalForm.addEventListener('submit', function(e){
+modalSubmit.addEventListener('click', function(e){
   e.preventDefault();
-  if(validFirst(firstName) && validLast(lastName) && validEmail(email) && validBirthdate(birthdate) && validQuantity(quantity) && validTown(town) && validConditions(conditions)){
-    submitSuccess.style.display = "flex";
-    modalForm.style.display = "none";
-    modalForm.submit();
-  } else {
+  if(form.style.display !== "none"){
+    submitSuccess.style.display = "block";
+    form.style.display = "none"
   }
 });
 
+
+// Soumission du formulaire 
+
 // Validation Prénom 
-firstName.addEventListener('focusout', function(){
+firstName.addEventListener('change', function(){
   validFirst(this);
 });
 
@@ -85,7 +89,7 @@ const validFirst = function(inputFirst){
 }
 
 // Validation Nom
-lastName.addEventListener('focusout', function(){
+lastName.addEventListener('change', function(){
   validLast(this);
 });
 
@@ -111,7 +115,7 @@ const validLast = function(inputLast){
 }
 
 // Validation email 
-email.addEventListener('focusout', function(){
+email.addEventListener('change', function(){
   validEmail(this);
 });
 
@@ -140,7 +144,7 @@ const validEmail = function(inputEmail){
 }
 
 // Validation date de naissance 
-birthdate.addEventListener('focusout', function(){
+birthdate.addEventListener('change', function(){
   validBirthdate(this);
 });
 
@@ -181,7 +185,7 @@ const validBirthdate = function(inputBirthdate){
 
 
 // Nombres de tournois 
-quantity.addEventListener('focusout', function(){
+quantity.addEventListener('change', function(){
   validQuantity(this);
 });
 
