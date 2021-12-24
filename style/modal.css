@@ -36,7 +36,7 @@ img {
 .header-logo {
     float: left;
 }
-.main-navbar {
+.main-navbar  {
     float: right;
 }
 .topnav a {
@@ -76,10 +76,15 @@ img {
     display: block;
     color: #FF001B;
   }
+  .topnav a.icon:hover {
+    color: #fff; 
+  }
 }
 
 @media screen and (max-width: 768px) {
-  /*.main-navbar {float: none;}*/
+  .main-navbar {
+    width: 100%;
+  }
   .topnav.responsive {position: relative;}
   .topnav.responsive .icon {
     position: absolute;
@@ -93,15 +98,18 @@ img {
   }
 }
 
-
-
- @media screen and (max-width: 540px) {
+@media screen and (max-width: 540px) {
+  .main-navbar {
+    width: 100%;
+  }
   .topnav a {display: none;}
   .topnav a.icon {
     float: right;
     display: block;
-    margin-top: -15px;
     color: #FF001B;
+  }
+  .topnav a.icon:hover {
+    color: #fff; 
   }
 } 
 
@@ -514,7 +522,7 @@ footer {
     white-space: normal;
   }
   .hero-text {
-    width: unset;
+    width: 75%;
     font-size: 1.5rem;
   }
   .hero-img img {
