@@ -105,7 +105,7 @@ function validFirst(){
 
 
 // Validation Nom
-lastName.addEventListener('change', function(){
+lastName.addEventListener('focusout', function(){
   validLast();
 });
 
@@ -127,7 +127,7 @@ function validLast(){
 }
 
 // Validation email 
-email.addEventListener('change', function(){
+email.addEventListener('focusout', function(){
   validEmail();
 });
 
@@ -153,7 +153,7 @@ function validEmail(){
 }
 
 // Validation date de naissance 
-birthdate.addEventListener('change', function(){
+birthdate.addEventListener('focusout', function(){
   validBirthdate();
 });
 
@@ -183,7 +183,7 @@ function validBirthdate(){
 
 
 // Nombres de tournois 
-quantity.addEventListener('change', function(){
+quantity.addEventListener('focusout', function(){
   validQuantity();
 });
 
