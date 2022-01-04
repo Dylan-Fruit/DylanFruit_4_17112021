@@ -99,6 +99,9 @@ img {
 }
 
 @media screen and (max-width: 540px) {
+  .header-logo{
+    width: 75%;
+  }
   .main-navbar {
     width: 100%;
   }
@@ -248,12 +251,6 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
-/* 
-input[data-error]::after {
-    content: attr(data-error);
-    font-size: 0.4em;
-    color: red;
-} */
 .checkbox-label,
 .checkbox2-label {
   position: relative;
@@ -537,6 +534,15 @@ footer {
   .copyrights {
     margin-top: 50px;
     text-align: center;
+  }
+}
+@media screen and (max-width: 320px){
+  .hero-headline{
+    font-size: 2rem;
+  }
+  .hero-text{
+    width: 60%;
+    font-size: 1rem;
   }
 }
 

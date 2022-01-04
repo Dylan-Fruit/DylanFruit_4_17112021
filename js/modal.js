@@ -26,7 +26,7 @@ const birthdate = document.querySelector("#birthdate");
 const birthdateForm = document.querySelector(".birthdateForm");
 const quantity = document.querySelector("#quantity");
 const quantityForm = document.querySelector(".quantityForm");
-const town = document.querySelector(".town");
+const town = document.querySelectorAll(".town");
 const townForm = document.querySelector(".townForm");
 const conditions = document.querySelector(".conditions");
 const conditionsForm = document.querySelector(".conditionsForm");
@@ -52,10 +52,11 @@ function launchModal() {
 }
 
 // close modal event 
-closeBtn.forEach((close) => close.addEventListener("click", closeModal));
-closeAfterValid.addEventListener("click", function(){
-  form.submit()
-});
+closeBtn.forEach((close) => close.addEventListener("click", () => {
+  closeModal();
+  form.reset();
+}));
+closeAfterValid.addEventListener("click", closeModal);
 
 // close modal form
 function closeModal() {
@@ -72,8 +73,9 @@ modalSubmit.addEventListener('click', function(e){
   validQuantity();
   validTown();
   validConditions();
-  if(firstValid && lastValid && emailValid && birthdateValid && quantityValid && townValid && conditionsValid === true){
+  if(firstValid && lastValid && emailValid && birthdateValid && quantityValid && validTown && conditionsValid === true){
       console.log('test');
+      form.reset(); // reset du formulaire s'il est valide 
       form.style.display = "none";
       submitSuccess.style.display = "block";
   }
@@ -85,7 +87,6 @@ firstName.addEventListener('focusout', function(){
 });
 
 // création d'un paragraphe dans le HTML pour le message d'erreur
-//firstErr = document.createElement('p');
 let firstValid;
 firstErr.style.display = "none";
 
@@ -179,6 +180,13 @@ function validBirthdate(){
     birthdate.style.border = "solid 2px red";
     birthdateValid = false;
   }
+  // condition seule pour empêcher l'utilisateur de mettre une adresse non valide à la main type 2021
+  if(birthdate.value > birthdate.max) {
+    birthdateErr.style.display = "block";
+    birthdateErr.textContent = "Veuillez indiquer une date valide."
+    birthdate.style.border = "solid 2px red";
+    birthdateValid = false;
+  }
 }
 
 
@@ -208,22 +216,24 @@ function validQuantity(){
 }
 
 // Validation villes 
-town.addEventListener('change', function(){
-  validTown();
-});
+for (let i = 0; i < town.length; i++) {
+  town[i].addEventListener("change", validTown);
+}
 
 let townValid;
 townErr.style.display = "none";
 
 function validTown(){
-  if(town.checked){
+  for (let i = 0; i < town.length; i++) {
+    console.log(town.value);
+     if(town[i].checked){
     townErr.style.display = "none";
-    townValid = true;
-  } else {
+    return true;
+  }
+}   
     townErr.style.display = "block";
     townErr.textContent = "Vous devez choisir une ville.";
-    townValid = false;
-  }
+    return false;
 }
 
 // Case des conditions bien cochée 
